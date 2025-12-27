@@ -230,11 +230,14 @@ export const ContentCalendar = () => {
 
           {/* Actual Days */}
           {calendarDays.map((day) => {
-            const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth() + 1;
+            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const dayEvents = filteredEvents.filter(e => e.date === dateStr);
             
             // Highlight today
-            const isToday = new Date().toDateString() === new Date(dateStr + 'T00:00:00').toDateString();
+            const now = new Date();
+            const isToday = now.getFullYear() === year && now.getMonth() === currentDate.getMonth() && now.getDate() === day;
 
             return (
               <div 
