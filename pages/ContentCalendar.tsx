@@ -205,7 +205,7 @@ export const ContentCalendar = () => {
             <button onClick={() => handleMonthChange(-1)} className="p-2 hover:bg-zinc-100 rounded-lg text-zinc-600 transition-colors">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={() => () => setCurrentDate(new Date())} className="text-xs font-semibold px-3 py-1 hover:bg-zinc-100 rounded-md transition-colors">
+            <button onClick={() => setCurrentDate(new Date())} className="text-xs font-semibold px-3 py-1 hover:bg-zinc-100 rounded-md transition-colors">
               Today
             </button>
             <button onClick={() => handleMonthChange(1)} className="p-2 hover:bg-zinc-100 rounded-lg text-zinc-600 transition-colors">

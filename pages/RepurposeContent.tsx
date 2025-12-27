@@ -115,7 +115,7 @@ export const RepurposeContent = () => {
                <div className="flex items-center justify-between mb-3">
                  <Badge variant="info">{platform}</Badge>
                  <button 
-                  onClick={() => navigator.clipboard.writeText(content)}
+                  onClick={() => navigator.clipboard.writeText(String(content))}
                   className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                   title="Copy"
                  >
@@ -123,7 +123,7 @@ export const RepurposeContent = () => {
                  </button>
                </div>
                <div className="prose prose-sm prose-slate max-w-none whitespace-pre-wrap">
-                 {content}
+                 {String(content)}
                </div>
              </Card>
            ))}

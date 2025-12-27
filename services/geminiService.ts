@@ -1,8 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentIdea, HashtagGroup, BrandVoiceAnalysis, AnalyticsInsight } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const MODEL_FLASH = 'gemini-3-flash-preview';
 
@@ -13,7 +12,7 @@ export const generateContentIdeas = async (
   goal: string,
   tone: string
 ): Promise<ContentIdea[]> => {
-  if (!apiKey) throw new Error("API Key is missing");
+  if (!process.env.API_KEY) throw new Error("API Key is missing");
 
   const prompt = `Generate 5 high-quality, viral-worthy content ideas for a ${niche} creator on ${platform}.
   Goal: ${goal}.
@@ -57,7 +56,7 @@ export const generateCaption = async (
   tone: string,
   extraContext: string
 ): Promise<string> => {
-  if (!apiKey) return "API Key is missing. Please configure it in your settings.";
+  if (!process.env.API_KEY) return "API Key is missing. Please configure it in your settings.";
 
   const prompt = `Write a high-engagement caption/post for ${platform} about "${topic}".
   Tone: ${tone}.
@@ -105,7 +104,7 @@ export const generateCaption = async (
 
 // --- Hashtag Generation ---
 export const generateHashtags = async (topic: string): Promise<HashtagGroup[]> => {
-  if (!apiKey) throw new Error("API Key is missing");
+  if (!process.env.API_KEY) throw new Error("API Key is missing");
 
   const prompt = `Generate 3 distinct groups of hashtags for the topic: "${topic}".
   Group 1: Niche specific (Low competition).
@@ -148,7 +147,7 @@ export const repurposeContent = async (
   sourceType: string,
   targetPlatforms: string[]
 ): Promise<Record<string, string>> => {
-  if (!apiKey) throw new Error("API Key is missing");
+  if (!process.env.API_KEY) throw new Error("API Key is missing");
 
   const prompt = `Repurpose the following ${sourceType} content into optimized posts for: ${targetPlatforms.join(', ')}.
   
@@ -175,7 +174,7 @@ export const repurposeContent = async (
 
 // --- Brand Voice Analysis ---
 export const analyzeBrandVoice = async (samples: string): Promise<BrandVoiceAnalysis | null> => {
-  if (!apiKey) return null;
+  if (!process.env.API_KEY) return null;
 
   const prompt = `Analyze the following text samples to determine the brand's unique voice and tone.
   
@@ -216,7 +215,7 @@ export const analyzeBrandVoice = async (samples: string): Promise<BrandVoiceAnal
 
 // --- Analytics Insights ---
 export const generateAnalyticsInsights = async (metricsJSON: any): Promise<AnalyticsInsight[]> => {
-  if (!apiKey) return [];
+  if (!process.env.API_KEY) return [];
 
   const prompt = `Analyze the following social media metrics and provide 3 actionable insights/tips to improve performance.
   
