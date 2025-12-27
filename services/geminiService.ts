@@ -1,7 +1,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentIdea, HashtagGroup, BrandVoiceAnalysis, AnalyticsInsight } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+
+const getAi = () => {
+  if (!aiInstance) {
+    // Ensure API Key is present or handle gracefully
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      console.warn("API_KEY is missing from process.env");
+    }
+    // Initialize with whatever is available, validation happens on call
+    aiInstance = new GoogleGenAI({ apiKey: apiKey || '' });
+  }
+  return aiInstance;
+};
 
 const MODEL_FLASH = 'gemini-3-flash-preview';
 
@@ -20,6 +33,7 @@ export const generateContentIdeas = async (
   Return the response in JSON format.`;
 
   try {
+    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -71,6 +85,7 @@ export const generateCaption = async (
   Format the output clearly with Markdown.`;
 
   try {
+    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -114,6 +129,7 @@ export const generateHashtags = async (topic: string): Promise<HashtagGroup[]> =
   Return JSON.`;
 
   try {
+    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -158,6 +174,7 @@ export const repurposeContent = async (
   Ensure formatting is appropriate for each platform (e.g., threads for Twitter, professional for LinkedIn, short & punchy for TikTok captions).`;
 
   try {
+    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -189,6 +206,7 @@ export const analyzeBrandVoice = async (samples: string): Promise<BrandVoiceAnal
   `;
 
   try {
+    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -226,6 +244,7 @@ export const generateAnalyticsInsights = async (metricsJSON: any): Promise<Analy
   `;
 
   try {
+     const ai = getAi();
      const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
