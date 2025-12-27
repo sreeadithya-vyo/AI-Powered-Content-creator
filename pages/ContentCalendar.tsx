@@ -205,7 +205,7 @@ export const ContentCalendar = () => {
             <button onClick={() => handleMonthChange(-1)} className="p-2 hover:bg-zinc-100 rounded-lg text-zinc-600 transition-colors">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={() => setCurrentDate(new Date())} className="text-xs font-semibold px-3 py-1 hover:bg-zinc-100 rounded-md transition-colors">
+            <button onClick={() => () => setCurrentDate(new Date())} className="text-xs font-semibold px-3 py-1 hover:bg-zinc-100 rounded-md transition-colors">
               Today
             </button>
             <button onClick={() => handleMonthChange(1)} className="p-2 hover:bg-zinc-100 rounded-lg text-zinc-600 transition-colors">
@@ -230,14 +230,11 @@ export const ContentCalendar = () => {
 
           {/* Actual Days */}
           {calendarDays.map((day) => {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth() + 1;
-            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const dayEvents = filteredEvents.filter(e => e.date === dateStr);
             
             // Highlight today
-            const now = new Date();
-            const isToday = now.getFullYear() === year && now.getMonth() === currentDate.getMonth() && now.getDate() === day;
+            const isToday = new Date().toDateString() === new Date(dateStr + 'T00:00:00').toDateString();
 
             return (
               <div 

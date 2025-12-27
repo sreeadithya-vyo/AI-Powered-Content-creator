@@ -1,20 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ContentIdea, HashtagGroup, BrandVoiceAnalysis, AnalyticsInsight } from "../types";
 
-let aiInstance: GoogleGenAI | null = null;
-
-const getAi = () => {
-  if (!aiInstance) {
-    // Ensure API Key is present or handle gracefully
-    const apiKey = process.env.API_KEY;
-    if (!apiKey) {
-      console.warn("API_KEY is missing from process.env");
-    }
-    // Initialize with whatever is available, validation happens on call
-    aiInstance = new GoogleGenAI({ apiKey: apiKey || '' });
-  }
-  return aiInstance;
-};
+const apiKey = process.env.API_KEY || '';
+const ai = new GoogleGenAI({ apiKey });
 
 const MODEL_FLASH = 'gemini-3-flash-preview';
 
@@ -25,7 +13,7 @@ export const generateContentIdeas = async (
   goal: string,
   tone: string
 ): Promise<ContentIdea[]> => {
-  if (!process.env.API_KEY) throw new Error("API Key is missing");
+  if (!apiKey) throw new Error("API Key is missing");
 
   const prompt = `Generate 5 high-quality, viral-worthy content ideas for a ${niche} creator on ${platform}.
   Goal: ${goal}.
@@ -33,7 +21,6 @@ export const generateContentIdeas = async (
   Return the response in JSON format.`;
 
   try {
-    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -70,7 +57,7 @@ export const generateCaption = async (
   tone: string,
   extraContext: string
 ): Promise<string> => {
-  if (!process.env.API_KEY) return "API Key is missing. Please configure it in your settings.";
+  if (!apiKey) return "API Key is missing. Please configure it in your settings.";
 
   const prompt = `Write a high-engagement caption/post for ${platform} about "${topic}".
   Tone: ${tone}.
@@ -85,7 +72,6 @@ export const generateCaption = async (
   Format the output clearly with Markdown.`;
 
   try {
-    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -119,7 +105,7 @@ export const generateCaption = async (
 
 // --- Hashtag Generation ---
 export const generateHashtags = async (topic: string): Promise<HashtagGroup[]> => {
-  if (!process.env.API_KEY) throw new Error("API Key is missing");
+  if (!apiKey) throw new Error("API Key is missing");
 
   const prompt = `Generate 3 distinct groups of hashtags for the topic: "${topic}".
   Group 1: Niche specific (Low competition).
@@ -129,7 +115,6 @@ export const generateHashtags = async (topic: string): Promise<HashtagGroup[]> =
   Return JSON.`;
 
   try {
-    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -163,7 +148,7 @@ export const repurposeContent = async (
   sourceType: string,
   targetPlatforms: string[]
 ): Promise<Record<string, string>> => {
-  if (!process.env.API_KEY) throw new Error("API Key is missing");
+  if (!apiKey) throw new Error("API Key is missing");
 
   const prompt = `Repurpose the following ${sourceType} content into optimized posts for: ${targetPlatforms.join(', ')}.
   
@@ -174,7 +159,6 @@ export const repurposeContent = async (
   Ensure formatting is appropriate for each platform (e.g., threads for Twitter, professional for LinkedIn, short & punchy for TikTok captions).`;
 
   try {
-    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -191,7 +175,7 @@ export const repurposeContent = async (
 
 // --- Brand Voice Analysis ---
 export const analyzeBrandVoice = async (samples: string): Promise<BrandVoiceAnalysis | null> => {
-  if (!process.env.API_KEY) return null;
+  if (!apiKey) return null;
 
   const prompt = `Analyze the following text samples to determine the brand's unique voice and tone.
   
@@ -206,7 +190,6 @@ export const analyzeBrandVoice = async (samples: string): Promise<BrandVoiceAnal
   `;
 
   try {
-    const ai = getAi();
     const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
@@ -233,7 +216,7 @@ export const analyzeBrandVoice = async (samples: string): Promise<BrandVoiceAnal
 
 // --- Analytics Insights ---
 export const generateAnalyticsInsights = async (metricsJSON: any): Promise<AnalyticsInsight[]> => {
-  if (!process.env.API_KEY) return [];
+  if (!apiKey) return [];
 
   const prompt = `Analyze the following social media metrics and provide 3 actionable insights/tips to improve performance.
   
@@ -244,7 +227,6 @@ export const generateAnalyticsInsights = async (metricsJSON: any): Promise<Analy
   `;
 
   try {
-     const ai = getAi();
      const response = await ai.models.generateContent({
       model: MODEL_FLASH,
       contents: prompt,
